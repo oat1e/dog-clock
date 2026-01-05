@@ -6,10 +6,10 @@ let fieldCenterX, fieldCenterY;
 let hourRadius, minuteRadius, secondRadius;
 let fieldRadius;
 
-// Color scheme matching the reference design
-const hourColor = { r: 255, g: 50, b: 50 };      // Red for hour
-const minuteColor = { r: 50, g: 255, b: 255 };   // Cyan for minute
-const secondColor = { r: 255, g: 255, b: 255 };  // White for second
+// Pastel color scheme for prancing dogs
+const hourColor = { r: 255, g: 182, b: 193 };    // Pastel pink for hour
+const minuteColor = { r: 176, g: 224, b: 230 };  // Pastel blue for minute
+const secondColor = { r: 255, g: 250, b: 205 };  // Pastel yellow for second
 
 function setup() {
     // Create canvas that fits well on screen
@@ -27,16 +27,16 @@ function setup() {
 }
 
 function draw() {
-    // Field background - dark green field color
-    background(12, 25, 8);
+    // Daisy field background - light green with flowers
+    background(200, 230, 180); // Light pastel green
     
-    // Draw subtle grass texture
-    drawGrass();
+    // Draw daisies across the field
+    drawDaisies();
     
-    // Draw the circular paths (very subtle guides - like worn paths)
+    // Draw the circular paths (visible but soft)
     noFill();
-    stroke(25, 35, 20, 30);
-    strokeWeight(0.5);
+    stroke(150, 180, 150, 100);
+    strokeWeight(2);
     circle(fieldCenterX, fieldCenterY, hourRadius * 2);
     circle(fieldCenterX, fieldCenterY, minuteRadius * 2);
     circle(fieldCenterX, fieldCenterY, secondRadius * 2);
@@ -78,12 +78,17 @@ function draw() {
 
 function drawDog(x, y, angle, dogColor, radius, type) {
     push();
-    translate(x, y);
+    
+    // Prancing bounce effect - whole dog bounces up and down
+    let pranceCycle = (frameCount * 0.2) % TWO_PI;
+    let bounce = abs(sin(pranceCycle)) * 2; // Bouncy prancing motion
+    
+    translate(x, y - bounce * 0.5);
     rotate(angle + HALF_PI); // Rotate so dog faces direction of movement
     
-    // Draw glowing effect
-    drawingContext.shadowBlur = 25;
-    drawingContext.shadowColor = `rgba(${dogColor.r}, ${dogColor.g}, ${dogColor.b}, 0.6)`;
+    // Draw glowing effect (softer for pastels)
+    drawingContext.shadowBlur = 20;
+    drawingContext.shadowColor = `rgba(${dogColor.r}, ${dogColor.g}, ${dogColor.b}, 0.5)`;
     
     noStroke();
     
@@ -113,51 +118,70 @@ function drawDog(x, y, angle, dogColor, radius, type) {
     vertex(10, 10);
     endShape(CLOSE);
     
-    // Running legs - animated position based on frame count
-    let legCycle = (frameCount * 0.3) % TWO_PI;
-    let frontLegOffset = sin(legCycle) * 3;
-    let backLegOffset = sin(legCycle + PI) * 3;
+    // Prancing legs - more bouncy, playful movement
+    let frontLift = sin(pranceCycle) * 4;
+    let backLift = sin(pranceCycle + PI) * 4;
     
-    fill(dogColor.r * 0.6, dogColor.g * 0.6, dogColor.b * 0.6);
+    fill(dogColor.r * 0.7, dogColor.g * 0.7, dogColor.b * 0.7);
     
-    // Front legs (running position)
-    rect(-6, -8 + frontLegOffset, 5, 12, 2);
-    rect(2, -8 + frontLegOffset, 5, 12, 2);
+    // Front legs (prancing - one lifted higher)
+    rect(-6, -6 + frontLift, 4, 10, 2);
+    rect(2, -8 + frontLift * 0.5, 4, 10, 2);
     
-    // Back legs (running position)
-    rect(-10, 8 + backLegOffset, 5, 12, 2);
-    rect(-2, 8 + backLegOffset, 5, 12, 2);
+    // Back legs (prancing - one lifted higher)
+    rect(-10, 6 + backLift, 4, 10, 2);
+    rect(-2, 8 + backLift * 0.5, 4, 10, 2);
     
-    // Tail (wagging, curved)
-    stroke(dogColor.r, dogColor.g, dogColor.b, 200);
-    strokeWeight(4);
+    // Tail (wagging happily, curved upward)
+    stroke(dogColor.r, dogColor.g, dogColor.b, 180);
+    strokeWeight(3);
     noFill();
-    let tailWag = sin(frameCount * 0.2) * 0.3;
+    let tailWag = sin(frameCount * 0.15) * 0.4;
     beginShape();
     curveVertex(-18, 0);
     curveVertex(-18, 0);
-    curveVertex(-24, -6 + tailWag * 2);
-    curveVertex(-28, -10 + tailWag * 3);
+    curveVertex(-22, -8 + tailWag * 2);
+    curveVertex(-26, -12 + tailWag * 3);
     endShape();
     
     // Dog eye (simple dot)
-    fill(255);
+    fill(80, 60, 40); // Brown eye
     noStroke();
     ellipse(17, -3, 3, 3);
     
     pop();
 }
 
-function drawGrass() {
-    // Draw subtle grass blades scattered across the field
-    stroke(20, 35, 15, 30);
-    strokeWeight(1);
-    randomSeed(42); // Consistent grass placement
-    for (let i = 0; i < 200; i++) {
-        let grassX = random(width);
-        let grassY = random(height);
-        let grassHeight = random(3, 8);
-        line(grassX, grassY, grassX + random(-2, 2), grassY - grassHeight);
+function drawDaisies() {
+    // Draw daisies scattered across the field
+    randomSeed(42); // Consistent daisy placement
+    
+    for (let i = 0; i < 50; i++) {
+        let daisyX = random(width);
+        let daisyY = random(height);
+        
+        // Skip daisies too close to center (where dogs run)
+        let distFromCenter = dist(daisyX, daisyY, fieldCenterX, fieldCenterY);
+        if (distFromCenter < fieldRadius * 1.1) continue;
+        
+        // Draw daisy stem
+        stroke(100, 150, 80);
+        strokeWeight(2);
+        line(daisyX, daisyY, daisyX, daisyY + 15);
+        
+        // Draw daisy petals (white)
+        noStroke();
+        fill(255, 255, 255, 200);
+        for (let p = 0; p < 8; p++) {
+            let petalAngle = (p * TWO_PI) / 8;
+            let petalX = daisyX + cos(petalAngle) * 6;
+            let petalY = daisyY + sin(petalAngle) * 6;
+            ellipse(petalX, petalY, 8, 4);
+        }
+        
+        // Draw daisy center (yellow)
+        fill(255, 220, 100);
+        ellipse(daisyX, daisyY, 6, 6);
     }
 }
 
