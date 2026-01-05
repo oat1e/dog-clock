@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Field Clock</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #0a0a0a;
+            font-family: Arial, sans-serif;
+        }
+        #sketch-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        canvas {
+            display: block;
+            border-radius: 20px;
+        }
+        .info {
+            color: white;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="sketch-container">
+        <div id="canvas-container"></div>
+        <div class="info">
+            <p>Three dogs running around a field represent the time</p>
+            <p><strong>Hour Dog</strong> (red) - <strong>Minute Dog</strong> (cyan) - <strong>Second Dog</strong> (white)</p>
+        </div>
+    </div>
+    <script src="sketch.js"></script>
+</body>
+</html>
+
