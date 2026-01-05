@@ -124,7 +124,7 @@ function drawDog(x, y, angle, color, radius, type) {
     pop();
 }
 
-function drawLabel(x, y, angle, text, color) {
+function drawLabel(x, y, angle, labelText, color) {
     push();
     translate(x, y);
     
@@ -142,7 +142,7 @@ function drawLabel(x, y, angle, text, color) {
     fill(color.r, color.g, color.b);
     textAlign(CENTER, CENTER);
     textSize(14);
-    text(text, labelX, labelY);
+    text(labelText, labelX, labelY);
     
     pop();
 }
